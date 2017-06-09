@@ -46,6 +46,19 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
         });
     });
 
+    router.get("/users/email/:user_email",function(req,res){
+        var query = "SELECT * FROM ?? WHERE ??=?";
+        var table = ["user_login","user_email",req.params.user_email];
+        query = mysql.format(query,table);
+        connection.query(query,function(err,rows){
+            if(err) {
+                res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+            } else {
+                res.json({"Error" : false, "Message" : "Success", "Users" : rows});
+            }
+        });
+    });
+
     router.put("/users",function(req,res){
         var query = "UPDATE ?? SET ?? = ? WHERE ?? = ?";
         var table = ["user_login","user_password",md5(req.body.password),"user_email",req.body.email];
